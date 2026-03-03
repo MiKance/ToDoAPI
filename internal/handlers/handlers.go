@@ -1,15 +1,21 @@
 package handlers
 
 import (
-	"ToDoAPI/internal/handlers/auth"
-	"ToDoAPI/internal/handlers/items"
-	"ToDoAPI/internal/handlers/lists"
+	"github.com/MiKance/ToDoAPI/internal/handlers/auth"
+	"github.com/MiKance/ToDoAPI/internal/handlers/items"
+	"github.com/MiKance/ToDoAPI/internal/handlers/lists"
+	"github.com/MiKance/ToDoAPI/internal/service"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
 type Handler struct {
+	service *service.Service
+}
+
+func NewHandler(service *service.Service) *Handler {
+	return &Handler{service: service}
 }
 
 func (h *Handler) InitRouter() *chi.Mux {

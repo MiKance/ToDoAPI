@@ -1,9 +1,10 @@
 package models
 
 import (
-	"ToDoAPI/internal/config"
 	"context"
 	"net/http"
+
+	"github.com/MiKance/ToDoAPI/internal/config"
 )
 
 type Server struct {

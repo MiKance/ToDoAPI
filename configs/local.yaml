@@ -4,3 +4,11 @@ server:
   port: "8080"
   read_timeout: 5m
   write_timeout: 5m
+
+postgres:
+  host: "localhost"
+  port: "5432"
+  username: "mikance"
+  password: "16777216"
+  db_Name: "todoapp"
+  ssl_mode: "disable"

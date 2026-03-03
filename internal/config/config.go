@@ -7,8 +7,9 @@ import (
 )
 
 type Config struct {
-	Env    string        `yaml:"env"`
-	Server *ServerConfig `yaml:"server"`
+	Env     string          `yaml:"env"`
+	Server  *ServerConfig   `yaml:"server"`
+	Storage *PostgresConfig `yaml:"postgres"`
 }
 
 type ServerConfig struct {
@@ -16,6 +17,15 @@ type ServerConfig struct {
 	Port         string        `yaml:"port"`
 	ReadTimeout  time.Duration `yaml:"read_timeout"`
 	WriteTimeout time.Duration `yaml:"write_timeout"`
+}
+
+type PostgresConfig struct {
+	Host     string `yaml:"host"`
+	Port     string `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	DBName   string `yaml:"db_name"`
+	SSLMode  string `yaml:"ssl_mode"`
 }
 
 func MustNewConfig(filename string) *Config {

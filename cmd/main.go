@@ -20,9 +20,10 @@ func main() {
 
 	ctx := context.Background()
 	ctxSt, cancel := context.WithTimeout(ctx, 5*time.Second)
-	_ = postgres.NewStorage(ctxSt, cfg.Storage)
+	defer cancel()
+	storage := postgres.NewStorage(ctxSt, cfg.Storage)
 
-	repo := repository.NewRepository()
+	repo := repository.NewRepository(storage.Pool)
 	serv := service.NewService(repo)
 	handler := handlers.NewHandler(serv)
 
@@ -40,7 +41,7 @@ func main() {
 	<-exit
 	ctx, cancel = context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	if err := server.GracefulShutdown(ctx); err != nil {
+	if err := server.GracefulShutdown(ctx, storage); err != nil {
 		fmt.Println("Graceful shutdown failed:", err)
 	}
 	fmt.Println("Server gracefully stopped")

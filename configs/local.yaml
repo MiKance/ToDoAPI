@@ -10,5 +10,5 @@ postgres:
   port: "5432"
   username: "mikance"
   password: "16777216"
-  db_Name: "todoapp"
+  db_name: "todoapp"
   ssl_mode: "disable"

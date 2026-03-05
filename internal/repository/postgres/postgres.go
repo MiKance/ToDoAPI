@@ -9,8 +9,16 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+const (
+	UsersTableName      = "users"
+	TodoListsTableName  = "todo_lists"
+	UsersListTableName  = "user_lists"
+	TodoItemsTableName  = "todo_items"
+	ListsItemsTableName = "lists_items"
+)
+
 type Storage struct {
-	pool *pgxpool.Pool
+	Pool *pgxpool.Pool
 }
 
 func NewStorage(ctx context.Context, cfg *config.PostgresConfig) *Storage {
@@ -18,11 +26,15 @@ func NewStorage(ctx context.Context, cfg *config.PostgresConfig) *Storage {
 
 	connString := fmt.Sprintf("postgres://%s:%s@%s:%s/%s",
 		cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)
+	fmt.Println(connString)
 	pool, err := pgxpool.New(ctx, connString)
 	if err != nil {
 		log.Fatal(err)
 	}
-	s.pool = pool
-
+	s.Pool = pool
 	return &s
+}
+
+func (s *Storage) Close() {
+	s.Pool.Close()
 }

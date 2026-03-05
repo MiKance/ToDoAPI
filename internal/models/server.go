@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/MiKance/ToDoAPI/internal/config"
+	"github.com/MiKance/ToDoAPI/internal/repository/postgres"
 )
 
 type Server struct {
@@ -22,6 +23,7 @@ func (server *Server) Start(cfg *config.ServerConfig, handler http.Handler) erro
 	return server.httpServer.ListenAndServe()
 }
 
-func (server *Server) GracefulShutdown(ctx context.Context) error {
+func (server *Server) GracefulShutdown(ctx context.Context, storage *postgres.Storage) error {
+	storage.Close()
 	return server.httpServer.Shutdown(ctx)
 }

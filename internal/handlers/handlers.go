@@ -19,6 +19,9 @@ func NewHandler(service *service.Service) *Handler {
 }
 
 func (h *Handler) InitRouter() *chi.Mux {
+	authHandl := auth.NewAuthHandler(h.service)
+	listHandl := lists.NewToDoListHandler(h.service)
+
 	router := chi.NewRouter()
 
 	router.Use(middleware.RequestID)
@@ -28,17 +31,18 @@ func (h *Handler) InitRouter() *chi.Mux {
 	router.Use(middleware.URLFormat)
 
 	router.Route("/auth", func(r chi.Router) {
-		r.Post("/sign-in", auth.SignIn())
-		r.Post("/sign-up", auth.SignUp())
+		r.Post("/sign-in", authHandl.SignIn())
+		r.Post("/sign-up", authHandl.SignUp())
 	})
 
 	router.Route("/api", func(r chi.Router) {
+		r.Use(h.userIdentify)
 		r.Route("/lists", func(r chi.Router) {
-			r.Post("/", lists.CreateList())
-			r.Get("/", lists.GetLists())
-			r.Get("/{id}", lists.GetListByID())
-			r.Put("/{id}", lists.UpdateList())
-			r.Delete("/{id}", lists.DeleteList())
+			r.Post("/", listHandl.CreateList())
+			r.Get("/", listHandl.GetLists())
+			r.Get("/{id}", listHandl.GetListByID())
+			r.Put("/{id}", listHandl.UpdateList())
+			r.Delete("/{id}", listHandl.DeleteList())
 
 			r.Route("/{id}/items", func(r chi.Router) {
 				r.Post("/", items.CreateItem())

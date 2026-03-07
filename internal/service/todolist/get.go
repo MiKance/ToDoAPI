@@ -6,7 +6,7 @@ import (
 	"github.com/MiKance/ToDoAPI/internal/models"
 )
 
-func (s *ToDoListService) GetLists(ctx context.Context, userID int) ([]*models.ToDoList, error) {
+func (s *ToDoListService) GetLists(ctx context.Context, userID int) (*[]models.ToDoList, error) {
 	return s.repo.GetLists(ctx, userID)
 }
 

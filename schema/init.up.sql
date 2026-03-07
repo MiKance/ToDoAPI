@@ -6,27 +6,17 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE todo_lists (
+CREATE TABLE lists (
     id SERIAL NOT NULL UNIQUE,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE user_lists (
+CREATE TABLE items (
     id SERIAL NOT NULL UNIQUE,
-    user_id INTEGER REFERENCES users (id) ON DELETE CASCADE NOT NULL,
-    list_id INTEGER REFERENCES todo_lists (id) ON DELETE CASCADE NOT NULL
-);
-
-CREATE TABLE todo_items (
-    id SERIAL NOT NULL UNIQUE,
+    list_id INTEGER REFERENCES lists(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
     description VARCHAR(255) NOT NULL,
     done BOOLEAN DEFAULT FALSE
-);
-
-CREATE TABLE list_items (
-    id SERIAL NOT NULL UNIQUE,
-    list_id INTEGER REFERENCES todo_lists (id) ON DELETE CASCADE NOT NULL,
-    item_id INTEGER REFERENCES todo_items (id) ON DELETE CASCADE NOT NULL
 );

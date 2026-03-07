@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/MiKance/ToDoAPI/internal/config"
@@ -20,6 +21,7 @@ func (server *Server) Start(cfg *config.ServerConfig, handler http.Handler) erro
 		ReadTimeout:    cfg.ReadTimeout,
 		WriteTimeout:   cfg.WriteTimeout,
 	}
+	fmt.Println("Starting server on http://" + cfg.Host + ":" + cfg.Port)
 	return server.httpServer.ListenAndServe()
 }
 

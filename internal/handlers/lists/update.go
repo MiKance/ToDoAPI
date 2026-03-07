@@ -36,6 +36,7 @@ func (h *ToDoListHandler) UpdateList() http.HandlerFunc {
 		if err := h.ToDoList.UpdateList(ctxTimeout, input, userID); err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			return
 		}
 		json.NewEncoder(w).Encode(map[string]string{"message": "success"})
 	}

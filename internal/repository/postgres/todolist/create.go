@@ -18,26 +18,11 @@ func NewToDoListPostgres(pool *pgxpool.Pool) *ToDoListPostgres {
 }
 
 func (s *ToDoListPostgres) CreateList(ctx context.Context, list models.ToDoList, userID int) (int, error) {
-	tx, err := s.pool.Begin(ctx)
-	if err != nil {
-		return 0, err
-	}
-	defer tx.Rollback(ctx)
-
-	query := fmt.Sprintf("INSERT INTO %s (title, description) VALUES ($1, $2) RETURNING id;", postgres.TodoListsTableName)
+	query := fmt.Sprintf("INSERT INTO %s (user_id, title, description) VALUES ($1, $2, $3) RETURNING id;",
+		postgres.ListsTableName)
 	var id int
-	err = tx.QueryRow(ctx, query, list.Title, list.Description).Scan(&id)
+	err := s.pool.QueryRow(ctx, query, userID, list.Title, list.Description).Scan(&id)
 	if err != nil {
-		return 0, err
-	}
-
-	query = fmt.Sprintf("INSERT INTO %s (user_id, list_id) VALUES ($1, $2) RETURNING id;", postgres.UsersListTableName)
-	err = tx.QueryRow(ctx, query, userID, id).Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-
-	if err = tx.Commit(ctx); err != nil {
 		return 0, err
 	}
 

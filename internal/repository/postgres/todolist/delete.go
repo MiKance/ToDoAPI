@@ -8,9 +8,7 @@ import (
 )
 
 func (s *ToDoListPostgres) DeleteList(ctx context.Context, listID, userID int) error {
-	query := fmt.Sprintf(`DELETE FROM %s USING %s WHERE %s.id = $1 AND %s.list_id = ANY(
-		SELECT list_id FROM %s WHERE user_id = $2)`, postgres.TodoListsTableName, postgres.UsersListTableName,
-		postgres.TodoListsTableName, postgres.UsersListTableName, postgres.UsersListTableName)
+	query := fmt.Sprintf(`DELETE FROM %s  WHERE id = $1 AND user_id = $2`, postgres.ListsTableName)
 
 	_, err := s.pool.Exec(ctx, query, listID, userID)
 	if err != nil {
